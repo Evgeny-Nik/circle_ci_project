@@ -12,9 +12,15 @@ jobs:
       - docker/check
       - docker/build:
           image: $DOCKERHUB_USERNAME/orb-test
+          auth:
+            username: $DOCKERHUB_USERNAME                   # This line is Docker credentials for authenticated pulls.
+            password: $DOCKERHUB_PASSWORD                   # They can be set as a context in the Organization Settings.
       - docker/push:
           digest-path: /tmp/digest.txt
           image: $DOCKERHUB_USERNAME/orb-test
+          auth:
+            username: $DOCKERHUB_USERNAME                   # This line is Docker credentials for authenticated pulls.
+            password: $DOCKERHUB_PASSWORD                   # They can be set as a context in the Organization Settings.
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
