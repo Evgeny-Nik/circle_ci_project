@@ -7,7 +7,7 @@ import custom_exceptions
 app = Flask(__name__)
 
 
-HOMEPAGE = "index.html"
+HOMEPAGE = "homepage.html"
 ERROR_PAGE = "error.html"
 
 
