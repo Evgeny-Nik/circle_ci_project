@@ -19,22 +19,21 @@ jobs:
           name: Build Docker image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
-            docker build -t $DOCKERHUB_USERNAME/weathertest:$TAG ./weather_app/
+            docker build -t $REGISTRY/$PROJECT:$TAG ./weather_app/
       - run:
           name: Run Docker image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
-            docker run -d --name test_container $DOCKERHUB_USERNAME/weathertest:$TAG
+            docker run -d --name test_container $REGISTRY/$PROJECT:$TAG
             docker exec -it test_container python3 tests/website_connectivity_unittest.py
       - run:
           name: Push application Docker image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
-            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-            docker push $DOCKERHUB_USERNAME/weathertest:$TAG
+            echo $DOCKERHUB_PASSWORD | docker login $REGISTRY -u $DOCKERHUB_USERNAME --password-stdin
+            docker push $REGISTRY/$PROJECT:$TAG
       - discord/status:
           fail_only: false
           failure_message: "**${CIRCLE_USERNAME}**'s build: **${CIRCLE_JOB}** failed."
           success_message: "**${CIRCLE_USERNAME}** deployed api to prod."
           webhook: "${DISCORD_STATUS_WEBHOOK}"
-          
