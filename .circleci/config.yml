@@ -30,7 +30,7 @@ jobs:
           name: Push application Docker image
           command: |
             TAG=0.1.$CIRCLE_BUILD_NUM
-            echo $DOCKERHUB_PASSWORD | docker login $REGISTRY -u $DOCKERHUB_USERNAME --password-stdin
+            echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
             docker push $REGISTRY/$PROJECT:$TAG
       - discord/status:
           fail_only: false
