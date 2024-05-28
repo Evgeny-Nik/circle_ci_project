@@ -40,3 +40,4 @@ workflows:                                                 # Workflow defines a 
   commit:                                         # Name of workflow
     jobs:
       - build-and-push                                          # Name of job run
+
