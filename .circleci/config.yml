@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
-  python: circleci/docker@2.6.0
+  docker: circleci/docker@2.6.0
+  discord: antonioned/discord@0.1.0
 
 jobs:
   build:
@@ -31,3 +32,8 @@ jobs:
             TAG=0.1.$CIRCLE_BUILD_NUM
             echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
             docker push $DOCKERHUB_USERNAME/weathertest:$TAG
+      - discord/status:
+          fail_only: false
+          failure_message: "**${CIRCLE_USERNAME}**'s build: **${CIRCLE_JOB}** failed."
+          success_message: "**${CIRCLE_USERNAME}** deployed api to prod."
+          webhook: "${DISCORD_STATUS_WEBHOOK}"
