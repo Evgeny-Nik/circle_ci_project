@@ -1,39 +1,18 @@
-version: 2.1
-
+version: '2.1'
 orbs:
   docker: circleci/docker@2.6.0
 
-executors:
-  docker-publisher: 
-    environment:
-      TAG: 0.1.$CIRCLE_BUILD_NUM
-      IMAGE_NAME: $DOCKER_USERNAME/circle-ci-weather-app:$TAG
-    docker: # Each job requires specifying an executor
-    # (either docker, macos, or machine), see
-      - image: circleci/node:latest
-        auth:
-            username: $DOCKER_USERNAME
-            password: $DOCKER_PASSWORD
-
-jobs:
-    publishLatestToHub: 
-      executor: docker-publisher
-      
-      steps: 
-        - checkout
-        - setup_remote_docker
-        - run:
-            name: Build Docker image
-            command: |
-              docker build -t $IMAGE_NAME .
-        - run: 
-            name: Publish Docker Image to Docker Hub
-            command: |
-              echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-              docker build -t $IMAGE_NAME .
-              docker push $IMAGE_NAME
-
 workflows:
-  build-master:
+  build-docker-image-only:
     jobs:
-       - publishLatestToHub
+      - docker/publish:
+          image: $DOCKER_USERNAME/$DOCKER_REPONAME:$TAG
+          update-description: true
+  build-docker-image-only-with-buildkit:
+    jobs:
+      - docker/publish:
+          image: $DOCKER_USERNAME/$DOCKER_REPONAME:$TAG
+          remote-docker-version: 20.10.12
+          update-description: true
+          use-buildkit: true
+          use-remote-docker: true
