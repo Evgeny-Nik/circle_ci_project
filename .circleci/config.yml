@@ -22,6 +22,7 @@ jobs:
       - run:
           name: Run Docker image
           command: |
+            TAG=0.1.$CIRCLE_BUILD_NUM
             docker run -d --name test_container $DOCKERHUB_USERNAME/weathertest:$TAG
             docker exec -it test_container python3 tests/website_connectivity_unittest.py
       - run:
